@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GrindSchoolSYS | Subjects</title>
+</head>
+<body>
+<h1>Subjects</h1>
+
+<p th:if="${#lists.isEmpty(subjects)}">No subjects found.</p>
+
+<ul>
+    <li th:each="subject : ${subjects}"
+        th:text="${subject.name}"></li>
+</ul>
+</body>
+</html>

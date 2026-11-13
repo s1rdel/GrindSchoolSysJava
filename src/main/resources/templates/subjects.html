@@ -10,8 +10,10 @@
 <p th:if="${#lists.isEmpty(subjects)}">No subjects found.</p>
 
 <ul>
-    <li th:each="subject : ${subjects}"
-        th:text="${subject.name}"></li>
+    <li th:each="subject : ${subjects}">
+        <a th:href="@{/subjects/{id}/sessions(id=${subject.id})}"
+           th:text="${subject.name}"></a>
+    </li>
 </ul>
 </body>
 </html>

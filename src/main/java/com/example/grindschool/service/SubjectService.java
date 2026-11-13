@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectService {
@@ -18,5 +19,9 @@ public class SubjectService {
 
     public List<Subject> getAllSubjects() {
         return repository.findAll(Sort.by("name"));
+    }
+
+    public Optional<Subject> findById(Long id) {
+        return repository.findById(id);
     }
 }

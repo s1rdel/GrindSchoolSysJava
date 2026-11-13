@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GrindSchoolSYS | Sessions</title>
+</head>
+<body>
+<h1 th:text="${subject.name + ' sessions'}">Subject sessions</h1>
+
+<p th:if="${bookingMessage}" th:text="${bookingMessage}" role="status"></p>
+<p th:if="${#lists.isEmpty(sessions)}">No upcoming sessions found.</p>
+
+<table th:unless="${#lists.isEmpty(sessions)}">
+    <thead>
+    <tr>
+        <th scope="col">Tutor</th>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+        <th scope="col">Total places</th>
+        <th scope="col">Booking</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="lesson : ${sessions}">
+        <td th:text="${lesson.tutor.name}"></td>
+        <td th:text="${lesson.date}"></td>
+        <td th:text="${lesson.time}"></td>
+        <td th:text="${lesson.totalCapacity}"></td>
+        <td>
+            <form method="post"
+                  th:action="@{/subjects/{subjectId}/sessions/{sessionId}/book(
+              subjectId=${subject.id}, sessionId=${lesson.id})}">
+                <button type="submit">Book</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/subjects}">Back to subjects</a></p>
+</body>
+</html>

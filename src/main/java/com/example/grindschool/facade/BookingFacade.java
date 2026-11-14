@@ -4,9 +4,11 @@ import com.example.grindschool.entity.Booking;
 import com.example.grindschool.entity.Session;
 import com.example.grindschool.entity.SessionStatus;
 import com.example.grindschool.entity.Student;
+import com.example.grindschool.event.BookingChangedEvent;
 import com.example.grindschool.repository.BookingRepository;
 import com.example.grindschool.repository.SessionRepository;
 import com.example.grindschool.repository.StudentRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +21,13 @@ public class BookingFacade {
     private final SessionRepository sessionRepository;
     private final StudentRepository studentRepository;
     private final BookingRepository bookingRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public BookingFacade(
-            SessionRepository sessionRepository,
-            StudentRepository studentRepository,
-            BookingRepository bookingRepository
-    ) {
+    public BookingFacade(SessionRepository sessionRepository, StudentRepository studentRepository, BookingRepository bookingRepository,  ApplicationEventPublisher eventPublisher) {
         this.sessionRepository = sessionRepository;
         this.studentRepository = studentRepository;
         this.bookingRepository = bookingRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -57,6 +57,9 @@ public class BookingFacade {
         }
 
         bookingRepository.save(new Booking(session, student));
+
+        eventPublisher.publishEvent(new BookingChangedEvent(studentId, sessionId, BookingChangedEvent.Action.BOOKED));
+
         return BookingResult.BOOKED;
     }
 
@@ -70,6 +73,7 @@ public class BookingFacade {
         return bookingRepository.findBySession_IdAndStudent_Id(sessionId, studentId)
                 .map(booking -> {
                     bookingRepository.delete(booking);
+                    eventPublisher.publishEvent(new BookingChangedEvent(studentId, sessionId, BookingChangedEvent.Action.CANCELLED));
                     return CancellationResult.CANCELLED;
                 })
                 .orElse(CancellationResult.BOOKING_NOT_FOUND);

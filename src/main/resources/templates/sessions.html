@@ -7,6 +7,7 @@
 <body>
 <h1 th:text="${subject.name + ' sessions'}">Subject sessions</h1>
 
+<p><a th:href="@{/notifications}">Notifications</a></p>
 <p>
     <a th:href="@{/subjects/{id}/sessions/new(id=${subject.id})}">Create session</a>
 </p>

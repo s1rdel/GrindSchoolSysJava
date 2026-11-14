@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GrindSchoolSYS | Notifications</title>
+</head>
+<body>
+<h1>Notifications</h1>
+
+<p th:if="${#lists.isEmpty(notifications)}">You have no notifications.</p>
+
+<ul th:unless="${#lists.isEmpty(notifications)}">
+    <li th:each="notification : ${notifications}"
+        th:text="${notification}"></li>
+</ul>
+
+<p><a th:href="@{/subjects}">Back to subjects</a></p>
+</body>
+</html>

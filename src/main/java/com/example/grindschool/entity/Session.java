@@ -37,6 +37,22 @@ public class Session {
     protected Session() {
     }
 
+    Session(
+            Subject subject,
+            Tutor tutor,
+            LocalDate date,
+            LocalTime time,
+            int totalCapacity,
+            SessionStatus status
+    ) {
+        this.subject = subject;
+        this.tutor = tutor;
+        this.date = date;
+        this.time = time;
+        this.totalCapacity = totalCapacity;
+        this.status = status;
+    }
+
     public Tutor getTutor() {
         return tutor;
     }

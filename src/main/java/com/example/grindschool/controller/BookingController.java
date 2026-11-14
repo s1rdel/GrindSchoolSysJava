@@ -42,4 +42,23 @@ public class BookingController {
         redirectAttributes.addFlashAttribute("bookingMessage", message);
         return "redirect:/subjects/" + subjectId + "/sessions";
     }
+
+    @PostMapping("/subjects/{subjectId}/sessions/{sessionId}/cancel")
+    public String cancelBooking(
+            @PathVariable("subjectId") Long subjectId,
+            @PathVariable("sessionId") Long sessionId,
+            RedirectAttributes redirectAttributes
+    ) {
+        BookingFacade.CancellationResult result =
+                bookingFacade.cancelBooking(subjectId, sessionId, demoStudentId);
+
+        String message = switch (result) {
+            case CANCELLED -> "Booking cancelled.";
+            case SESSION_NOT_FOUND -> "Session not found.";
+            case BOOKING_NOT_FOUND -> "No booking was found for this session.";
+        };
+
+        redirectAttributes.addFlashAttribute("bookingMessage", message);
+        return "redirect:/subjects/" + subjectId + "/sessions";
+    }
 }

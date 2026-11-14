@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GrindSchoolSYS | Create session</title>
+</head>
+<body>
+<h1 th:text="${'Create a session for ' + subject.name}">Create a session</h1>
+
+<p th:if="${#lists.isEmpty(tutors)}">Add a tutor before creating a session.</p>
+
+<form method="post"
+      th:action="@{/subjects/{subjectId}/sessions/new(subjectId=${subject.id})}"
+      th:object="${sessionForm}">
+    <ul th:if="${#fields.hasAnyErrors()}" role="alert">
+        <li th:each="error : ${#fields.allErrors()}" th:text="${error}"></li>
+    </ul>
+
+    <p>
+        <label for="tutorId">Tutor</label>
+        <select th:field="*{tutorId}" required>
+            <option value="">Select a tutor</option>
+            <option th:each="tutor : ${tutors}"
+                    th:value="${tutor.id}"
+                    th:text="${tutor.name}"></option>
+        </select>
+    </p>
+
+    <p>
+        <label for="date">Date</label>
+        <input type="date" th:field="*{date}" required>
+    </p>
+
+    <p>
+        <label for="time">Time</label>
+        <input type="time" th:field="*{time}" required>
+    </p>
+
+    <p>
+        <label for="totalCapacity">Total places</label>
+        <input type="number" th:field="*{totalCapacity}" min="1" required>
+    </p>
+
+    <button type="submit" th:disabled="${#lists.isEmpty(tutors)}">Create session</button>
+</form>
+
+<p><a th:href="@{/subjects/{id}/sessions(id=${subject.id})}">Back to sessions</a></p>
+</body>
+</html>

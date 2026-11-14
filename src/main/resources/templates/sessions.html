@@ -7,6 +7,9 @@
 <body>
 <h1 th:text="${subject.name + ' sessions'}">Subject sessions</h1>
 
+<p>
+    <a th:href="@{/subjects/{id}/sessions/new(id=${subject.id})}">Create session</a>
+</p>
 <p th:if="${bookingMessage}" th:text="${bookingMessage}" role="status"></p>
 <p th:if="${#lists.isEmpty(sessions)}">No upcoming sessions found.</p>
 
@@ -29,8 +32,15 @@
         <td>
             <form method="post"
                   th:action="@{/subjects/{subjectId}/sessions/{sessionId}/book(
-              subjectId=${subject.id}, sessionId=${lesson.id})}">
+              subjectId=${subject.id}, sessionId=${lesson.id})}"
+                  th:unless="${bookedSessionIds.contains(lesson.id)}">
                 <button type="submit">Book</button>
+            </form>
+
+            <form method="post"
+                  th:action="@{/subjects/{subjectId}/sessions/{sessionId}/cancel(subjectId=${subject.id}, sessionId=${lesson.id})}"
+                  th:if="${bookedSessionIds.contains(lesson.id)}">
+                <button type="submit">Cancel</button>
             </form>
         </td>
     </tr>

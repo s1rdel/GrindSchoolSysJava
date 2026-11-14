@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 public class BookingFacade {
@@ -59,6 +60,26 @@ public class BookingFacade {
         return BookingResult.BOOKED;
     }
 
+    @Transactional
+    public CancellationResult cancelBooking(Long subjectId, Long sessionId, Long studentId) {
+        Session session = sessionRepository.findByIdForUpdate(sessionId).orElse(null);
+        if (session == null || !subjectId.equals(session.getSubject().getId())) {
+            return CancellationResult.SESSION_NOT_FOUND;
+        }
+
+        return bookingRepository.findBySession_IdAndStudent_Id(sessionId, studentId)
+                .map(booking -> {
+                    bookingRepository.delete(booking);
+                    return CancellationResult.CANCELLED;
+                })
+                .orElse(CancellationResult.BOOKING_NOT_FOUND);
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Long> getBookedSessionIds(Long studentId, Long subjectId) {
+        return bookingRepository.findBookedSessionIds(studentId, subjectId);
+    }
+
     public enum BookingResult {
         BOOKED,
         SESSION_NOT_FOUND,
@@ -66,5 +87,11 @@ public class BookingFacade {
         STUDENT_NOT_FOUND,
         ALREADY_BOOKED,
         SESSION_FULL
+    }
+
+    public enum CancellationResult {
+        CANCELLED,
+        SESSION_NOT_FOUND,
+        BOOKING_NOT_FOUND
     }
 }

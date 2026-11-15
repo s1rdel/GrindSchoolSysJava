@@ -2,48 +2,57 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>GrindSchoolSYS | Create session</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create session | GrindSchoolSYS</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1 th:text="${'Create a session for ' + subject.name}">Create a session</h1>
+<header th:replace="~{fragments/navigation :: navigation('subjects')}"></header>
 
-<p th:if="${#lists.isEmpty(tutors)}">Add a tutor before creating a session.</p>
+<main class="container page">
+    <a class="back-link" th:href="@{/subjects/{id}/sessions(id=${subject.id})}">← Back to sessions</a>
 
-<form method="post"
-      th:action="@{/subjects/{subjectId}/sessions/new(subjectId=${subject.id})}"
-      th:object="${sessionForm}">
-    <ul th:if="${#fields.hasAnyErrors()}" role="alert">
-        <li th:each="error : ${#fields.allErrors()}" th:text="${error}"></li>
-    </ul>
+    <div class="page-heading">
+        <h1 th:text="${'Create a session for ' + subject.name}">Create a session</h1>
+    </div>
 
-    <p>
-        <label for="tutorId">Tutor</label>
-        <select th:field="*{tutorId}" required>
-            <option value="">Select a tutor</option>
-            <option th:each="tutor : ${tutors}"
-                    th:value="${tutor.id}"
-                    th:text="${tutor.name}"></option>
-        </select>
-    </p>
+    <p class="notice" th:if="${#lists.isEmpty(tutors)}">Add a tutor before creating a session.</p>
 
-    <p>
-        <label for="date">Date</label>
-        <input type="date" th:field="*{date}" required>
-    </p>
+    <form class="panel session-form" method="post"
+          th:action="@{/subjects/{subjectId}/sessions/new(subjectId=${subject.id})}"
+          th:object="${sessionForm}">
+        <ul class="form-errors" th:if="${#fields.hasAnyErrors()}" role="alert">
+            <li th:each="error : ${#fields.allErrors()}" th:text="${error}"></li>
+        </ul>
 
-    <p>
-        <label for="time">Time</label>
-        <input type="time" th:field="*{time}" required>
-    </p>
+        <div class="form-grid">
+            <div class="field field--wide">
+                <label for="tutorId">Tutor</label>
+                <select id="tutorId" th:field="*{tutorId}" required>
+                    <option value="">Select a tutor</option>
+                    <option th:each="tutor : ${tutors}"
+                            th:value="${tutor.id}" th:text="${tutor.name}"></option>
+                </select>
+            </div>
 
-    <p>
-        <label for="totalCapacity">Total places</label>
-        <input type="number" th:field="*{totalCapacity}" min="1" required>
-    </p>
+            <div class="field">
+                <label for="date">Date</label>
+                <input id="date" type="date" th:field="*{date}" required>
+            </div>
 
-    <button type="submit" th:disabled="${#lists.isEmpty(tutors)}">Create session</button>
-</form>
+            <div class="field">
+                <label for="time">Time</label>
+                <input id="time" type="time" th:field="*{time}" required>
+            </div>
 
-<p><a th:href="@{/subjects/{id}/sessions(id=${subject.id})}">Back to sessions</a></p>
+            <div class="field">
+                <label for="totalCapacity">Total places</label>
+                <input id="totalCapacity" type="number" th:field="*{totalCapacity}" min="1" required>
+            </div>
+        </div>
+
+        <button class="button" type="submit" th:disabled="${#lists.isEmpty(tutors)}">Create session</button>
+    </form>
+</main>
 </body>
 </html>

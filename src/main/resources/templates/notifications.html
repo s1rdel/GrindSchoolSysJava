@@ -2,18 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>GrindSchoolSYS | Notifications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notifications | GrindSchoolSYS</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1>Notifications</h1>
+<header th:replace="~{fragments/navigation :: navigation('notifications')}"></header>
 
-<p th:if="${#lists.isEmpty(notifications)}">You have no notifications.</p>
+<main class="container page">
+    <div class="page-heading">
+        <h1>Notifications</h1>
+    </div>
 
-<ul th:unless="${#lists.isEmpty(notifications)}">
-    <li th:each="notification : ${notifications}"
-        th:text="${notification}"></li>
-</ul>
+    <p class="panel" th:if="${#lists.isEmpty(notifications)}">You have no notifications.</p>
 
-<p><a th:href="@{/subjects}">Back to subjects</a></p>
+    <ul class="notification-list" th:unless="${#lists.isEmpty(notifications)}">
+        <li class="notification-item" th:each="notification : ${notifications}"
+            th:text="${notification}"></li>
+    </ul>
+</main>
 </body>
 </html>
